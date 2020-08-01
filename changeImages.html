@@ -123,53 +123,71 @@
             let slideNum = 0;
             let slideCount = $(".slides li").length;
             let lastIndex = slideCount - 1;
+            //下面這行只有最一開始載入時才用得到，目的是在第一張圖的小框框上面塗上白色。註解掉就會發現第一下沒被上色。
             $(".dot li").eq(0).css("background", "white").siblings().css("background", "transparent");
             $(".dot li").mouseenter(function () {
-                slideNum = $(this).index();
-                show();
+                //slideNum = $(this).index();
+                //用原有的showNumber，就可以達到一樣的效果
+                //show();
+                showNumber.eq(iNow).trigger("click");
             })
+            /*
             function show() {
                 $(".dot li").eq(slideNum).css("background", "#fff").siblings().css("background", "transparent");
                 let move = 0 - 800 * slideNum;
                 $("ul.slides").css("left", move);
             }
+            */
             $("#prevSlide").click(function () {
-                slideNum--;
-                if (slideNum < 0) slideNum = lastIndex;
-                show();
+                //slideNum--;
+                //if (slideNum < 0) slideNum = lastIndex;
+                //show();
+                iNow--;
+                if (iNow < 0) iNow = showNumber.length - 1;
+                showNumber.eq(iNow).trigger("click");
             });
             $("#nextSlide").click(function () {
-                slideNum++;
-                if (slideNum > lastIndex) slideNum = 0;
-                show();
+                //slideNum++;
+                //if (slideNum > lastIndex) slideNum = 0;
+                //show();
+                iNow++;
+                if (iNow > showNumber.length - 1) iNow = 0;
+                showNumber.eq(iNow).trigger("click");
             });
+
             var wrapper = $(".wrapper"),
                 ul = wrapper.find("ul.slides"),
                 showNumber = wrapper.find("ul.dot li"),
-                oneWidth = wrapper.find("ul.slides li").eq(0).width();
+                oneWidth = wrapper.find("ul.slides li").eq(0).width(),
+                isPaused = false; //新增一個isPaused的flag給計時器用
             var timer = null;
             var iNow = 0;
             showNumber.on("click", function () {
+                $(this).css("background", "#fff").siblings().css("background", "transparent");
                 $(this).addClass("active").siblings().removeClass("active");
                 var index = $(this).index();
                 iNow = index;
                 ul.animate({
                     "left": -oneWidth * iNow,
                 })
-            })
+            });
             timer = setInterval(function () {
+              if(!isPaused) {
                 iNow++;
                 if (iNow > showNumber.length - 1) {
                     iNow = 0;
                 }
                 showNumber.eq(iNow).trigger("click");
+              }
             }, 3000);
-        });
-        $(".wrapper").hover(function(){
-                $(this).clearInterval(timer);
+
+            wrapper.hover(function(){
+                isPaused = true;
             },function(){
-                $(this).setInterval(timer,3000);
+                isPaused = false;
             })
+
+        }); //你之前把wrapper.hover寫在這外面了，雖然還是能運作，但要注意一下括號的位置。
     </script>
 </body>
 
