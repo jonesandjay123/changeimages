@@ -143,28 +143,33 @@
                 if (slideNum > lastIndex) slideNum = 0;
                 show();
             });
-               var wrapper=$(".wrapper"),
-               ul = wrapper.find("ul.slides"),
-               showNumber = wrapper.find("ul.dot li"),
-               oneWidth=wrapper.find("ul.slides li").eq(0).width();
-               var timer=null;
-               var iNow=0;
-               showNumber.on("click",function(){
-                   $(this).addClass("active").siblings().removeClass("active");
-                   var index=$(this).index();
-                   iNow=index;
-                   ul.animate({
-                    "left":-oneWidth*iNow,
-                   })
-               })
-               timer = setInterval(function(){
-                   iNow++;
-                   if(iNow>showNumber.length-1){
-                       iNow=0;
-                   }
-                   showNumber.eq(iNow).trigger("click");
-               },3000);
+            var wrapper = $(".wrapper"),
+                ul = wrapper.find("ul.slides"),
+                showNumber = wrapper.find("ul.dot li"),
+                oneWidth = wrapper.find("ul.slides li").eq(0).width();
+            var timer = null;
+            var iNow = 0;
+            showNumber.on("click", function () {
+                $(this).addClass("active").siblings().removeClass("active");
+                var index = $(this).index();
+                iNow = index;
+                ul.animate({
+                    "left": -oneWidth * iNow,
+                })
+            })
+            timer = setInterval(function () {
+                iNow++;
+                if (iNow > showNumber.length - 1) {
+                    iNow = 0;
+                }
+                showNumber.eq(iNow).trigger("click");
+            }, 3000);
         });
+        $(".wrapper").hover(function(){
+                $(this).clearInterval(timer);
+            },function(){
+                $(this).setInterval(timer,3000);
+            })
     </script>
 </body>
 
